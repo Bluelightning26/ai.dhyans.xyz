@@ -57,7 +57,7 @@
 <script>
     let currentConversation = null;
 
-    // Load model information directly from Hack Club API
+
     fetch('https://ai.hackclub.com/model', {
         headers: {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
@@ -152,7 +152,7 @@
 
         if (!message.trim()) return;
 
-        // Show user message immediately
+
         const responseEl = document.getElementById('response');
         const userMessageEl = document.createElement('div');
         userMessageEl.className = 'message user';
