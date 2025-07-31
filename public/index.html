@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hack Club AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Hack Club AI Chat</h1>
+    <div class="model-info">
+        <strong>Current Model:</strong> <span id="model"></span>
+    </div>
+    <button id="newConversation">New Conversation</button>
+    <form id="chatForm">
+        <input type="text" id="message" placeholder="Type your message..." required>
+        <button type="submit">Send</button>
+    </form>
+    <div id="response"></div>
+</div>
+<script>
+    fetch('/model')
+        .then(res => {
+            if (!res.ok) throw new Error('Model not found');
+            return res.text();
+        })
+        .then(model => document.getElementById('model').textContent = model)
+        .catch(() => document.getElementById('model').textContent = 'Unavailable');
+
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const message = document.getElementById('message').value;
+        const res = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        document.getElementById('response').textContent = data.choices?.[0]?.message?.content || 'No response';
+        document.getElementById('message').value = '';
+    });
+
+    document.getElementById('newConversation').addEventListener('click', async () => {
+        await fetch('/new-conversation', { method: 'POST' });
+        document.getElementById('response').textContent = '';
+        document.getElementById('message').value = '';
+    });
+</script>
+</body>
+</html>
