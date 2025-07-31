@@ -7,44 +7,151 @@
 </head>
 <body>
 <div class="container">
-    <h1>Hack Club AI Chat</h1>
-    <div class="model-info">
-        <strong>Current Model:</strong> <span id="model"></span>
+    <div class="sidebar">
+        <button id="newConversation">New Chat</button>
+        <div id="conversationList"></div>
     </div>
-    <button id="newConversation">New Conversation</button>
-    <form id="chatForm">
-        <input type="text" id="message" placeholder="Type your message..." required>
-        <button type="submit">Send</button>
-    </form>
-    <div id="response"></div>
+    <div class="main-content">
+        <h1>AI Chat</h1>
+        <div class="model-info">
+            <strong>Current Model:</strong> <span id="model"></span>
+        </div>
+        <div id="response"></div>
+        <form id="chatForm">
+            <input type="text" id="message" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
 </div>
 <script>
+    let currentConversation = null;
+
+    // Load model information
     fetch('/model')
-        .then(res => {
-            if (!res.ok) throw new Error('Model not found');
-            return res.text();
+        .then(res => res.text())
+        .then(model => document.getElementById('model').textContent = model);
+
+    function updateConversationList() {
+        fetch('/conversations')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('conversationList');
+                list.innerHTML = '';
+                currentConversation = data.current;
+
+                data.conversations.forEach(id => {
+                    const item = document.createElement('div');
+                    item.className = `conversation-item ${id === currentConversation ? 'active' : ''}`;
+
+                    const time = document.createElement('span');
+                    time.textContent = new Date(parseInt(id)).toLocaleTimeString();
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = '×';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteConversation(id);
+                    };
+
+                    item.appendChild(time);
+                    item.appendChild(deleteBtn);
+                    item.onclick = () => switchConversation(id);
+                    list.appendChild(item);
+                });
+            });
+    }
+
+    function deleteConversation(id) {
+        fetch(`/conversation/${id}`, { method: 'DELETE' })
+            .then(() => {
+                updateConversationList();
+                if (id === currentConversation) {
+                    document.getElementById('response').textContent = '';
+                }
+            });
+    }
+
+    function switchConversation(id) {
+        fetch('/switch-conversation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
         })
-        .then(model => document.getElementById('model').textContent = model)
-        .catch(() => document.getElementById('model').textContent = 'Unavailable');
+            .then(res => res.json())
+            .then(data => {
+                currentConversation = id;
+                displayMessages(data.messages);
+                updateConversationList();
+            });
+    }
+
+    function displayMessages(messages) {
+        const responseEl = document.getElementById('response');
+        if (!messages || messages.length === 0) {
+            responseEl.textContent = '';
+            return;
+        }
+
+        responseEl.innerHTML = messages.map(m => {
+            const role = m.role === 'user' ? 'You' : 'AI';
+            return `<div class="message ${m.role}"><strong>${role}:</strong> ${m.content}</div>`;
+        }).join('');
+    }
 
     document.getElementById('chatForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const message = document.getElementById('message').value;
-        const res = await fetch('/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-        });
-        const data = await res.json();
-        document.getElementById('response').textContent = data.choices?.[0]?.message?.content || 'No response';
-        document.getElementById('message').value = '';
+        const messageInput = document.getElementById('message');
+        const message = messageInput.value;
+
+        if (!message.trim()) return;
+
+        // Show user message immediately
+        const responseEl = document.getElementById('response');
+        const userMessageEl = document.createElement('div');
+        userMessageEl.className = 'message user';
+        userMessageEl.innerHTML = `<strong>You:</strong> ${message}`;
+        responseEl.appendChild(userMessageEl);
+
+        messageInput.value = '';
+        messageInput.disabled = true;
+
+        try {
+            const res = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await res.json();
+
+            if (data.choices?.[0]?.message?.content) {
+                const aiMessageEl = document.createElement('div');
+                aiMessageEl.className = 'message assistant';
+                aiMessageEl.innerHTML = `<strong>AI:</strong> ${data.choices[0].message.content}`;
+                responseEl.appendChild(aiMessageEl);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            const errorEl = document.createElement('div');
+            errorEl.className = 'message error';
+            errorEl.textContent = 'Failed to send message. Please try again.';
+            responseEl.appendChild(errorEl);
+        } finally {
+            messageInput.disabled = false;
+            messageInput.focus();
+        }
     });
 
     document.getElementById('newConversation').addEventListener('click', async () => {
         await fetch('/new-conversation', { method: 'POST' });
         document.getElementById('response').textContent = '';
         document.getElementById('message').value = '';
+        updateConversationList();
     });
+
+    // Initial load of conversations
+    updateConversationList();
 </script>
 </body>
 </html>
