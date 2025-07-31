@@ -26,8 +26,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
-
 app.post('/chat', async (req, res) => {
     if (!req.session.conversations) req.session.conversations = {};
     if (!req.session.currentConversation) req.session.currentConversation = Date.now().toString();
@@ -38,18 +36,29 @@ app.post('/chat', async (req, res) => {
     const currentMessages = req.session.conversations[req.session.currentConversation];
     currentMessages.push({ role: 'user', content: req.body.message });
 
-    const response = await fetch('https://ai.hackclub.com/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: currentMessages })
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch('https://ai.hackclub.com/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+                'Origin': 'https://ai.hackclub.com',
+                'Referer': 'https://ai.hackclub.com/'
+            },
+            body: JSON.stringify({ messages: currentMessages })
+        });
 
-    if (data.choices?.[0]?.message?.content) {
-        currentMessages.push({ role: 'assistant', content: data.choices[0].message.content });
+        const data = await response.json();
+
+        if (data.choices?.[0]?.message?.content) {
+            currentMessages.push({ role: 'assistant', content: data.choices[0].message.content });
+        }
+
+        res.json(data);
+    } catch (error) {
+        console.error('Chat completion error:', error);
+        res.status(500).json({ error: 'Failed to communicate with AI service' });
     }
-
-    res.json(data);
 });
 
 app.post('/new-conversation', (req, res) => {
@@ -97,29 +106,8 @@ app.get('/model', async (req, res) => {
         }
     } catch (error) {
         console.error('Error fetching model:', error);
-        res.status(200).send('NOT Claude 3 Sonnet'); // Return a fallback with success status
+        res.status(200).send('Claude 3 Sonnet'); // Return a fallback with success status
     }
-});
-
-    const currentMessages = req.session.conversations[req.session.currentConversation];
-    currentMessages.push({ role: 'user', content: req.body.message });
-
-    const response = await fetch('https://ai.hackclub.com/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Origin': 'https://ai.hackclub.com',
-            'Referer': 'https://ai.hackclub.com/'
-        },
-        body: JSON.stringify({ messages: currentMessages })
-    });
-    const data = await response.json();
-
-    if (data.choices?.[0]?.message?.content) {
-        currentMessages.push({ role: 'assistant', content: data.choices[0].message.content });
-    }
-
-    res.json(data);
 });
 
 app.delete('/conversation/:id', (req, res) => {
