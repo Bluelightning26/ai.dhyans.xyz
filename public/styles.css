@@ -1,9 +1,9 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f0f2f5;
+    background: #1e1e2e; /* Crust */
     margin: 0;
     padding: 0;
-    color: #1c1e21;
+    color: #cdd6f4; /* Text */
 }
 
 .container {
@@ -16,26 +16,27 @@ body {
 }
 
 .sidebar {
-    background: white;
+    background: #181825; /* Mantle */
     border-radius: 12px;
     padding: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .main-content {
-    background: white;
+    background: #181825; /* Mantle */
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 h1 {
     font-size: 24px;
     margin: 0 0 24px 0;
+    color: #f5c2e7; /* Pink */
 }
 
 .model-info {
-    color: #65676B;
+    color: #bac2de; /* Subtext1 */
     font-size: 14px;
     margin-bottom: 24px;
 }
@@ -43,8 +44,8 @@ h1 {
 #newConversation {
     width: 100%;
     padding: 10px;
-    background: #0095f6;
-    color: white;
+    background: #89b4fa; /* Blue */
+    color: #11111b; /* Base */
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -54,7 +55,7 @@ h1 {
 }
 
 #newConversation:hover {
-    background: #0081d6;
+    background: #b4befe; /* Lavender */
 }
 
 #conversationList {
@@ -68,29 +69,29 @@ h1 {
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    background: #f0f2f5;
+    background: #313244; /* Surface0 */
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.2s;
 }
 
 .conversation-item.active {
-    background: #e6f2fe;
-    color: #0095f6;
+    background: #45475a; /* Surface1 */
+    color: #89b4fa; /* Blue */
 }
 
 .conversation-item:hover {
-    background: #e4e6eb;
+    background: #45475a; /* Surface1 */
 }
 
 .delete-btn {
     margin-left: auto;
     padding: 4px 8px;
-    background: #dc3545;
-    color: white;
+    background: #f38ba8; /* Red */
+    color: #11111b; /* Base */
     border: none;
     border-radius: 4px;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.2s;
 }
 
@@ -107,15 +108,17 @@ h1 {
 #message {
     flex: 1;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #45475a; /* Surface1 */
+    background: #313244; /* Surface0 */
+    color: #cdd6f4; /* Text */
     border-radius: 8px;
     font-size: 15px;
 }
 
 #chatForm button {
     padding: 12px 24px;
-    background: #0095f6;
-    color: white;
+    background: #89b4fa; /* Blue */
+    color: #11111b; /* Base */
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -125,7 +128,7 @@ h1 {
 #response {
     margin-top: 24px;
     padding: 16px;
-    background: #f0f2f5;
+    background: #313244; /* Surface0 */
     border-radius: 8px;
     min-height: 100px;
     white-space: pre-wrap;
@@ -140,17 +143,17 @@ h1 {
 }
 
 .message.user {
-    background-color: #e6f2fe;
+    background-color: #45475a; /* Surface1 */
     align-self: flex-end;
 }
 
 .message.assistant {
-    background-color: #f0f2f5;
+    background-color: #313244; /* Surface0 */
 }
 
 .message.error {
-    background-color: #ffe6e6;
-    color: #dc3545;
+    background-color: #45475a; /* Surface1 */
+    color: #f38ba8; /* Red */
 }
 
 #response {
@@ -162,28 +165,17 @@ h1 {
     max-height: 500px;
     overflow-y: auto;
     padding: 16px;
-    background: #fff;
+    background: #313244; /* Surface0 */
     border-radius: 8px;
-    border: 1px solid #eaeaea;
-}
-
-.delete-btn {
-    margin-left: auto;
-    padding: 4px 8px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    opacity: 1; /* Always visible */
-    transition: opacity 0.2s;
+    border: 1px solid #45475a; /* Surface1 */
 }
 
 /* Header Styles */
 header {
-    background-color: #0095f6;
-    color: white;
+    background-color: #89b4fa; /* Blue */
+    color: #11111b; /* Base */
     padding: 16px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .header-content {
@@ -196,7 +188,7 @@ header {
 }
 
 .logo a {
-    color: white;
+    color: #11111b; /* Base */
     font-size: 20px;
     font-weight: bold;
     text-decoration: none;
@@ -214,7 +206,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: #11111b; /* Base */
     text-decoration: none;
     font-weight: 500;
     transition: opacity 0.2s;
@@ -226,94 +218,12 @@ nav ul li a:hover {
 
 /* Footer Styles */
 footer {
-    background-color: #f8f9fa;
+    background-color: #181825; /* Mantle */
     padding: 24px 0;
     margin-top: 40px;
-    border-top: 1px solid #eaeaea;
+    border-top: 1px solid #313244; /* Surface0 */
 }
 
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.footer-links {
-    display: flex;
-    gap: 24px;
-}
-
-.footer-links a {
-    color: #0095f6;
-    text-decoration: none;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-}
-
-/* Adjust container to account for header */
-.container {
-    margin: 24px auto;
-}
-
-/* About page styles */
-.about-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 24px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.about-container h1 {
-    margin-bottom: 16px;
-}
-
-.about-container h2 {
-    margin: 24px 0 16px;
-}
-
-.about-container p {
-    line-height: 1.6;
-    margin-bottom: 16px;
-}
-
-.about-container ul {
-    padding-left: 24px;
-    line-height: 1.6;
-}
-
-/* Sticky footer solution that preserves your grid layout */
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.container {
-    /* Keep your existing grid properties */
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 24px;
-    max-width: 1200px;
-    padding: 0 20px;
-
-    /* Add these properties to make it work with the flex layout */
-    flex: 1;
-    margin: 24px auto;
-    width: 100%;
-}
-/* Updated footer styling */
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -330,8 +240,47 @@ body {
     margin-top: 12px;
 }
 
+.footer-links a {
+    color: #89b4fa; /* Blue */
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
 .footer-content p {
     margin: 6px 0;
+}
+
+/* About page styles */
+.about-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #181825; /* Mantle */
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.about-container h1 {
+    margin-bottom: 16px;
+    color: #f5c2e7; /* Pink */
+}
+
+.about-container h2 {
+    margin: 24px 0 16px;
+    color: #f5c2e7; /* Pink */
+}
+
+.about-container p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.about-container ul {
+    padding-left: 24px;
+    line-height: 1.6;
 }
 
 .thinking-toggle {
@@ -348,4 +297,52 @@ body {
 
 .thinking-toggle input {
     margin-right: 8px;
+}
+
+/* Change AI speaking bubble color */
+.message.assistant {
+    background-color: #313244; /* Surface0 - current color */
+    background-color: #1e2030; /* A darker shade for contrast */
+    border-left: 3px solid #cba6f7; /* Mauve from Catppuccin for accent */
+}
+
+/* Tone down the blue elements */
+#newConversation {
+    background: #89b4fa; /* Current Blue */
+    background: #74c7ec; /* Toned down to Sapphire */
+    color: #11111b; /* Base */
+}
+
+#newConversation:hover {
+    background: #b4befe; /* Current Lavender */
+    background: #89b4fa; /* Original Blue as hover state */
+}
+
+#chatForm button {
+    background: #89b4fa; /* Current Blue */
+    background: #74c7ec; /* Toned down to Sapphire */
+    color: #11111b; /* Base */
+}
+
+#chatForm button:hover {
+    background: #89b4fa; /* Original Blue as hover state */
+}
+
+/* Header color change */
+header {
+    background-color: #89b4fa; /* Current Blue */
+    background-color: #7287fd; /* Toned down to Sapphire */
+    color: #11111b; /* Base */
+}
+
+/* Footer links */
+.footer-links a {
+    color: #89b4fa; /* Current Blue */
+    color: #74c7ec; /* Toned down to Sapphire */
+}
+
+/* Active conversation items */
+.conversation-item.active {
+    background: #45475a; /* Surface1 */
+    color: #74c7ec; /* Toned down to Sapphire (was Blue) */
 }
