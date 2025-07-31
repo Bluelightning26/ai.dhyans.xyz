@@ -26,6 +26,7 @@ app.use((req, res, next) => {
     next();
 });
 
+// REMOVE the first /chat handler and KEEP only this one
 app.post('/chat', async (req, res) => {
     if (!req.session.conversations) req.session.conversations = {};
     if (!req.session.currentConversation) req.session.currentConversation = Date.now().toString();
@@ -41,9 +42,10 @@ app.post('/chat', async (req, res) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-                'Origin': 'https://ai.hackclub.com',
-                'Referer': 'https://ai.hackclub.com/'
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive'
             },
             body: JSON.stringify({ messages: currentMessages })
         });
@@ -90,10 +92,10 @@ app.get('/model', async (req, res) => {
     try {
         const response = await fetch('https://ai.hackclub.com/model', {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-                'Origin': 'https://ai.hackclub.com',
-                'Referer': 'https://ai.hackclub.com/',
-                'Accept': '*/*'
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'Accept': 'text/plain, */*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive'
             }
         });
 
@@ -101,12 +103,12 @@ app.get('/model', async (req, res) => {
             const modelName = await response.text();
             res.send(modelName);
         } else {
-            console.error('Model API returned:', response.status);
-            res.status(200).send('Claude 3 Sonnet'); // Return a fallback but with success status
+            console.error('Model API returned status:', response.status);
+            res.status(200).send('Claude 3 Sonnet'); // Fallback
         }
     } catch (error) {
         console.error('Error fetching model:', error);
-        res.status(200).send('Claude 3 Sonnet'); // Return a fallback with success status
+        res.status(200).send('Claude 3 Sonnet'); // Fallback
     }
 });
 
