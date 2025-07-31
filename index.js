@@ -64,17 +64,25 @@ app.post('/switch-conversation', (req, res) => {
 
 app.get('/model', async (req, res) => {
     try {
-        const response = await fetch('https://ai.hackclub.com/model');
-        console.log('Model Response Status:', response.status);
-        const text = await response.text();
-        console.log('Model Response Body:', text);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Add a default model name in case the fetch fails
+        let modelName = "hAI";
+
+        try {
+            const response = await fetch('https://ai.hackclub.com/model');
+            if (response.ok) {
+                modelName = await response.text();
+            } else {
+                console.error('Model API returned:', response.status);
+            }
+        } catch (error) {
+            console.error('Error fetching model:', error);
         }
-        res.send(text);
+
+        // Always return something even if fetch fails
+        res.send(modelName);
     } catch (error) {
-        console.error('Model fetch error:', error);
-        res.status(500).send(error.message);
+        console.error('Model endpoint error:', error);
+        res.status(500).send(modelName);
     }
 });
 
