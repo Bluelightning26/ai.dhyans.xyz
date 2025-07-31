@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
   },
   "private": true,
   "dependencies": {
+    "@vercel/analytics": "^1.5.0",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "node-fetch": "^3.3.2"
