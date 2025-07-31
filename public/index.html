@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Hack Club AI Chat</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="/marked.min.js"></script>
 </head>
 <body>
 <header>
@@ -56,27 +55,14 @@
     </div>
 </footer>
 
+
+
+
+
+
 <script>
     let currentConversation = null;
     let noThinking = false;
-
-    // Configure marked for markdown rendering
-    if (typeof marked !== 'undefined') {
-        marked.setOptions({
-            breaks: true,
-            gfm: true,
-            tables: true,
-            sanitize: false
-        });
-    }
-
-    // Function to render markdown content
-    function renderMarkdown(content) {
-        if (typeof marked !== 'undefined') {
-            return marked.parse(content);
-        }
-        return content; // Fallback if marked isn't loaded
-    }
 
     fetch('https://ai.hackclub.com/model', {
         headers: {
@@ -161,11 +147,7 @@
 
         responseEl.innerHTML = messages.map(m => {
             const role = m.role === 'user' ? 'You' : 'AI';
-            if (m.role === 'assistant') {
-                return `<div class="message ${m.role}"><strong>${role}:</strong> <div class="message-content">${renderMarkdown(m.content)}</div></div>`;
-            } else {
-                return `<div class="message ${m.role}"><strong>${role}:</strong> ${m.content}</div>`;
-            }
+            return `<div class="message ${m.role}"><strong>${role}:</strong> ${m.content}</div>`;
         }).join('');
     }
 
@@ -175,6 +157,7 @@
         const message = messageInput.value;
 
         if (!message.trim()) return;
+
 
         const responseEl = document.getElementById('response');
         const userMessageEl = document.createElement('div');
@@ -197,13 +180,7 @@
             if (data.choices?.[0]?.message?.content) {
                 const aiMessageEl = document.createElement('div');
                 aiMessageEl.className = 'message assistant';
-
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'message-content';
-                contentDiv.innerHTML = renderMarkdown(data.choices[0].message.content);
-
-                aiMessageEl.innerHTML = '<strong>AI:</strong> ';
-                aiMessageEl.appendChild(contentDiv);
+                aiMessageEl.innerHTML = `<strong>AI:</strong> ${data.choices[0].message.content}`;
                 responseEl.appendChild(aiMessageEl);
             }
         } catch (error) {
@@ -232,6 +209,7 @@
     // Initial load of conversations
     updateConversationList();
 
+
     function initThinkingMode() {
         fetch('/thinking-mode')
             .then(res => res.json())
@@ -255,6 +233,7 @@
                 console.error('Error updating thinking mode:', err);
             });
     });
+
 
 
     initThinkingMode();
