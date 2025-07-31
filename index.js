@@ -104,11 +104,11 @@ app.get('/model', async (req, res) => {
             res.send(modelName);
         } else {
             console.error('Model API returned status:', response.status);
-            res.status(200).send('Claude 3 Sonnet'); // Fallback
+            res.status(200).send('Hack Club AI'); // Fallback
         }
     } catch (error) {
         console.error('Error fetching model:', error);
-        res.status(200).send('Claude 3 Sonnet'); // Fallback
+        res.status(200).send('Hack Club AI'); // Fallback
     }
 });
 
