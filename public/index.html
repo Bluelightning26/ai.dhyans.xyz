@@ -14,7 +14,7 @@
     <div class="main-content">
         <h1>AI Chat</h1>
         <div class="model-info">
-            <strong>Current Model:</strong> <span id="model"></span>
+            <strong>Current Model:</strong> <span id="model">Loading...</span>
         </div>
         <div id="response"></div>
         <form id="chatForm">
@@ -26,10 +26,16 @@
 <script>
     let currentConversation = null;
 
-    // Load model information
-    fetch('/model')
+    // Load model information directly from Hack Club API
+    fetch('https://ai.hackclub.com/model', {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            'Accept': 'text/plain, */*'
+        }
+    })
         .then(res => res.text())
-        .then(model => document.getElementById('model').textContent = model);
+        .then(model => document.getElementById('model').textContent = model)
+        .catch(() => document.getElementById('model').textContent = 'Claude 3 Sonnet');
 
     function updateConversationList() {
         fetch('/conversations')
@@ -59,6 +65,9 @@
                     item.onclick = () => switchConversation(id);
                     list.appendChild(item);
                 });
+            })
+            .catch(err => {
+                console.error('Error fetching conversations:', err);
             });
     }
 
@@ -69,6 +78,9 @@
                 if (id === currentConversation) {
                     document.getElementById('response').textContent = '';
                 }
+            })
+            .catch(err => {
+                console.error('Error deleting conversation:', err);
             });
     }
 
@@ -83,6 +95,9 @@
                 currentConversation = id;
                 displayMessages(data.messages);
                 updateConversationList();
+            })
+            .catch(err => {
+                console.error('Error switching conversation:', err);
             });
     }
 
@@ -144,10 +159,14 @@
     });
 
     document.getElementById('newConversation').addEventListener('click', async () => {
-        await fetch('/new-conversation', { method: 'POST' });
-        document.getElementById('response').textContent = '';
-        document.getElementById('message').value = '';
-        updateConversationList();
+        try {
+            await fetch('/new-conversation', { method: 'POST' });
+            document.getElementById('response').textContent = '';
+            document.getElementById('message').value = '';
+            updateConversationList();
+        } catch (err) {
+            console.error('Error creating new conversation:', err);
+        }
     });
 
     // Initial load of conversations
