@@ -6,6 +6,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <a href="/">Hack Club AI Chat</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
 <div class="container">
     <div class="sidebar">
         <button id="newConversation">New Chat</button>
@@ -23,6 +37,23 @@
         </form>
     </div>
 </div>
+
+<footer>
+    <div class="footer-content">
+        <p>Made by Dhyan & Utilizes <a target="_blank" href="https://ai.hackclub.com">ai.hackclub.com</a></p>
+        <p><strong> PERMITTED FOR USE ONLY BY HACK CLUBBERS IN THE SLACK</strong></p>
+        <div class="footer-links">
+            <a href="https://hackclub.com/slack" target="_blank">Join the Slack</a>
+            <a href="https://github.com/Bluelightning26/ai.dhyans.xyz" target="_blank">GitHub</a>
+        </div>
+    </div>
+</footer>
+
+
+
+
+
+
 <script>
     let currentConversation = null;
 
@@ -171,6 +202,9 @@
 
     // Initial load of conversations
     updateConversationList();
+
+
+
 </script>
 </body>
 </html>

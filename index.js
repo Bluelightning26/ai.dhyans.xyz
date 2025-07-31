@@ -26,7 +26,10 @@ app.use((req, res, next) => {
     next();
 });
 
-// REMOVE the first /chat handler and KEEP only this one
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'about.html'));
+});
+
 app.post('/chat', async (req, res) => {
     if (!req.session.conversations) req.session.conversations = {};
     if (!req.session.currentConversation) req.session.currentConversation = Date.now().toString();

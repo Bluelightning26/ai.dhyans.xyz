@@ -132,7 +132,6 @@ h1 {
     line-height: 1.5;
 }
 
-/* Add these styles to your existing CSS */
 .message {
     padding: 12px;
     margin-bottom: 12px;
@@ -177,4 +176,147 @@ h1 {
     border-radius: 4px;
     opacity: 1; /* Always visible */
     transition: opacity 0.2s;
+}
+
+/* Header Styles */
+header {
+    background-color: #0095f6;
+    color: white;
+    padding: 16px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo a {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 24px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+nav ul li a:hover {
+    opacity: 0.8;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #f8f9fa;
+    padding: 24px 0;
+    margin-top: 40px;
+    border-top: 1px solid #eaeaea;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+}
+
+.footer-links a {
+    color: #0095f6;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Adjust container to account for header */
+.container {
+    margin: 24px auto;
+}
+
+/* About page styles */
+.about-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 24px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.about-container h1 {
+    margin-bottom: 16px;
+}
+
+.about-container h2 {
+    margin: 24px 0 16px;
+}
+
+.about-container p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.about-container ul {
+    padding-left: 24px;
+    line-height: 1.6;
+}
+
+/* Sticky footer solution that preserves your grid layout */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    /* Keep your existing grid properties */
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 24px;
+    max-width: 1200px;
+    padding: 0 20px;
+
+    /* Add these properties to make it work with the flex layout */
+    flex: 1;
+    margin: 24px auto;
+    width: 100%;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 24px 0;
+    border-top: 1px solid #eaeaea;
+    margin-top: auto; /* Push to bottom */
 }
