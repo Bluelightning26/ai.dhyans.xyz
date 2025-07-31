@@ -13,6 +13,12 @@ app.use(session({
     saveUninitialized: true
 }));
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
 app.post('/chat', async (req, res) => {
     if (!req.session.conversations) req.session.conversations = {};
     if (!req.session.currentConversation) req.session.currentConversation = Date.now().toString();
@@ -64,26 +70,53 @@ app.post('/switch-conversation', (req, res) => {
 
 app.get('/model', async (req, res) => {
     try {
-        // Add a default model name in case the fetch fails
-        let modelName = "hAI";
-
-        try {
-            const response = await fetch('https://ai.hackclub.com/model');
-            if (response.ok) {
-                modelName = await response.text();
-            } else {
-                console.error('Model API returned:', response.status);
+        const response = await fetch('https://ai.hackclub.com/model', {
+            headers: {
+                'Origin': 'https://ai.hackclub.com',
+                'Referer': 'https://ai.hackclub.com/',
+                'Accept': 'text/plain'
             }
-        } catch (error) {
-            console.error('Error fetching model:', error);
-        }
+        });
 
-        // Always return something even if fetch fails
-        res.send(modelName);
+        if (response.ok) {
+            const modelName = await response.text();
+            res.send(modelName);
+        } else {
+            console.error('Model API returned:', response.status, await response.text());
+            res.status(response.status).send('hAI'); // Fallback model name
+        }
     } catch (error) {
-        console.error('Model endpoint error:', error);
-        res.status(500).send(modelName);
+        console.error('Error fetching model:', error);
+        res.status(500).send('hackclub-ai');
     }
+});
+
+app.post('/chat', async (req, res) => {
+    if (!req.session.conversations) req.session.conversations = {};
+    if (!req.session.currentConversation) req.session.currentConversation = Date.now().toString();
+    if (!req.session.conversations[req.session.currentConversation]) {
+        req.session.conversations[req.session.currentConversation] = [];
+    }
+
+    const currentMessages = req.session.conversations[req.session.currentConversation];
+    currentMessages.push({ role: 'user', content: req.body.message });
+
+    const response = await fetch('https://ai.hackclub.com/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Origin': 'https://ai.hackclub.com',
+            'Referer': 'https://ai.hackclub.com/'
+        },
+        body: JSON.stringify({ messages: currentMessages })
+    });
+    const data = await response.json();
+
+    if (data.choices?.[0]?.message?.content) {
+        currentMessages.push({ role: 'assistant', content: data.choices[0].message.content });
+    }
+
+    res.json(data);
 });
 
 app.delete('/conversation/:id', (req, res) => {
