@@ -2,9 +2,21 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
-
+const { marked } = require('marked');
 
 const app = express();
+
+// Configure marked for security
+marked.setOptions({
+    breaks: true,
+    gfm: true,
+    sanitize: false, // We'll handle sanitization if needed
+    highlight: function(code, lang) {
+        // Optional: Add syntax highlighting here if you want server-side highlighting
+        return code;
+    }
+});
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -25,6 +37,11 @@ app.use((req, res, next) => {
     }
 
     next();
+});
+
+// Add endpoint to serve marked library
+app.get('/marked.min.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'node_modules', 'marked', 'marked.min.js'));
 });
 
 app.get('/about', (req, res) => {
