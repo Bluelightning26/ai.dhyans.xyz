@@ -38,19 +38,38 @@ app.post('/chat', async (req, res) => {
     }
 
     const currentMessages = req.session.conversations[req.session.currentConversation];
-    currentMessages.push({ role: 'user', content: req.body.message });
+
+    // Save the original message for the UI
+    const originalMessage = req.body.message;
+
+    // Modify message if noThinking is enabled
+    let messageToSend = originalMessage;
+    if (req.session.noThinking) {
+        messageToSend = "/no_think " + messageToSend;
+    }
+
+    // Save original message to conversation history
+    currentMessages.push({ role: 'user', content: originalMessage });
 
     try {
         const response = await fetch('https://ai.hackclub.com/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
                 'Accept': 'application/json, text/plain, */*',
                 'Accept-Language': 'en-US,en;q=0.9',
                 'Connection': 'keep-alive'
             },
-            body: JSON.stringify({ messages: currentMessages })
+            body: JSON.stringify({
+                messages: currentMessages.map((msg, index) => {
+                    // Only modify the last user message
+                    if (index === currentMessages.length - 1 && msg.role === 'user') {
+                        return { ...msg, content: messageToSend };
+                    }
+                    return msg;
+                })
+            })
         });
 
         const data = await response.json();
@@ -64,6 +83,16 @@ app.post('/chat', async (req, res) => {
         console.error('Chat completion error:', error);
         res.status(500).json({ error: 'Failed to communicate with AI service' });
     }
+});
+
+app.get('/thinking-mode', (req, res) => {
+    if (req.session.noThinking === undefined) req.session.noThinking = false;
+    res.json({ noThinking: req.session.noThinking });
+});
+
+app.post('/thinking-mode', (req, res) => {
+    req.session.noThinking = req.body.noThinking;
+    res.json({ noThinking: req.session.noThinking });
 });
 
 app.post('/new-conversation', (req, res) => {

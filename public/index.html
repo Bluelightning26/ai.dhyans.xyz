@@ -29,6 +29,12 @@
         <h1>AI Chat</h1>
         <div class="model-info">
             <strong>Current Model:</strong> <span id="model">Loading...</span>
+            <div class="thinking-toggle">
+                <label for="thinkingToggle">
+                    <input type="checkbox" id="thinkingToggle">
+                    <span>Hide AI Thinking</span>
+                </label>
+            </div>
         </div>
         <div id="response"></div>
         <form id="chatForm">
@@ -56,7 +62,7 @@
 
 <script>
     let currentConversation = null;
-
+    let noThinking = false;
 
     fetch('https://ai.hackclub.com/model', {
         headers: {
@@ -204,6 +210,33 @@
     updateConversationList();
 
 
+    function initThinkingMode() {
+        fetch('/thinking-mode')
+            .then(res => res.json())
+            .then(data => {
+                noThinking = data.noThinking;
+                document.getElementById('thinkingToggle').checked = noThinking;
+            })
+            .catch(err => {
+                console.error('Error fetching thinking mode:', err);
+            });
+    }
+
+    document.getElementById('thinkingToggle').addEventListener('change', function() {
+        noThinking = this.checked;
+        fetch('/thinking-mode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ noThinking })
+        })
+            .catch(err => {
+                console.error('Error updating thinking mode:', err);
+            });
+    });
+
+
+
+    initThinkingMode();
 
 </script>
 </body>
