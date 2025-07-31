@@ -1,3 +1,4 @@
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -5,8 +6,9 @@ const session = require('express-session');
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session({
-    secret: 'your-secret-key',
+    secret: 'api-key-goes-here',
     resave: false,
     saveUninitialized: true
 }));
@@ -61,9 +63,19 @@ app.post('/switch-conversation', (req, res) => {
 });
 
 app.get('/model', async (req, res) => {
-    const response = await fetch('https://ai.hackclub.com/model');
-    const model = await response.text();
-    res.send(model);
+    try {
+        const response = await fetch('https://ai.hackclub.com/model');
+        console.log('Model Response Status:', response.status);
+        const text = await response.text();
+        console.log('Model Response Body:', text);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        res.send(text);
+    } catch (error) {
+        console.error('Model fetch error:', error);
+        res.status(500).send(error.message);
+    }
 });
 
 app.delete('/conversation/:id', (req, res) => {
