@@ -158,12 +158,10 @@ h1, .about-container h1, .about-container h2 {
 }
 
 #response {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 24px;
-    min-height: 200px;
-    max-height: 500px;
+    width: 100%;
+    height: 350px;
+    min-height: 250px;
+    max-height: 400px;
     overflow-y: auto;
     padding: 16px;
     background: var(--surface0);
@@ -171,7 +169,11 @@ h1, .about-container h1, .about-container h2 {
     border-radius: 8px;
     white-space: pre-wrap;
     line-height: 1.5;
+    margin: 0;
+    box-sizing: border-box;
 }
+
+
 
 header {
     background-color: var(--lavender);
@@ -223,11 +225,12 @@ footer {
     background-color: var(--mantle);
     padding: 24px 0;
     border-top: 1px solid var(--surface0);
-    position: fixed;
+    /*position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
-    z-index: 100;
+    z-index: 100;*/
+    margin-top: 40px;
 }
 
 .footer-content {
